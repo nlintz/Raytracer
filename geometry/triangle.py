@@ -6,10 +6,12 @@ import matplotlib.pyplot as plt
 
 
 class Triangle(Geometry):
-    def __init__(self, vertices, single_sided=1.):
+    def __init__(self, vertices, single_sided=1., clockwise=False):
         self.vertices = vertices
-        self.normal = self.get_normal()
         self.single_sided = single_sided
+        self.normal = self.get_normal()
+        if clockwise:
+            self.normal = -self.normal
 
         v0 = self.vertices[:, 0:1]
         v1 = self.vertices[:, 1:2]

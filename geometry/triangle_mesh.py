@@ -6,7 +6,7 @@ import global_config
 
 
 class TriangleMesh(Geometry):
-    def __init__(self, n_faces, face_index, verts_index, vertices, single_sided=1):
+    def __init__(self, n_faces, face_index, verts_index, vertices, single_sided=0., clockwise=False):
         self.P = []
         k = 0
         max_vert_index = 0
@@ -40,7 +40,7 @@ class TriangleMesh(Geometry):
             V.append(P[tris_index[j]])
             V.append(P[tris_index[j + 1]])
             V.append(P[tris_index[j + 2]])
-            self.P.append(Triangle(np.concatenate(V, axis=1), single_sided=0.))
+            self.P.append(Triangle(np.concatenate(V, axis=1), single_sided=single_sided, clockwise=clockwise))
             j += 3
 
     def intersection(self, O, D):
@@ -55,6 +55,7 @@ class TriangleMesh(Geometry):
         t_out = intersection
         N_out = np.array([ns[i, :, j] for j, i in enumerate(triangle_indexes)]).T  # TODO: YOU CAN WRITE THIS BETTER
         M_out = O + t_out * D
+
         return t_out, M_out, N_out
 
 class TriSphere(TriangleMesh):
