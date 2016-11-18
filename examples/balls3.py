@@ -3,7 +3,7 @@ from camera import Camera
 from ray_tracer import RayTracer
 from scene_element import SceneElement
 from scene import Scene
-from geometry.sphere import Sphere, DiffuseSphere, ShinySphere
+from geometry.sphere import Sphere
 from material import Material, Finish
 from material.finishes import VerySoftDull, Medium, HardPolished, VeryHardPolished
 import material.colors as colors
@@ -19,7 +19,9 @@ def render():
     mat_ls = Material([0., 0., 0.], emission_color=np.array([2., 2., 2.]).reshape(-1, 1))
     mat_base = Material([0.2, 0.2, 0.2])
 
-    mat_s1 = Material(colors.P_Silver3, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
+    # mat_s1 = Material(colors.Aquamarine, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
+    mat_s1 = Material(colors.Glass_Winebottle, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
+    # mat_s1 = Material(colors.P_Silver3, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
 
     mat_s2 = Material(colors.P_Copper3, finish=Medium, metallic=True)
     mat_s3 = Material(colors.P_Chrome3, finish=Medium, metallic=True)

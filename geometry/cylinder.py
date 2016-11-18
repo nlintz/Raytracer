@@ -91,39 +91,3 @@ class Cylinder(Geometry, Primitive):
             N_out = vl.vnorm(vl.transform(self.R, vl.inverse_transform(self.S, M * xy_mask)))
 
             return t_out, M_out, N_out
-
-class DiffuseCylinder(Cylinder):  # Test Class
-    def __init__(self, center, radius, length, material):
-        super(DiffuseCylinder, self).__init__(center, radius, length, closed=True)
-        self.material = material
-        # self.R = vl.rotation_matrix(np.pi + np.pi/4, [0, 1, 0], [0, 0, 0])
-        # self.R = vl.rotation_matrix(-np.pi/4, [1, 1, 0], [0, 0, 0])
-        # self.R = vl.rotation_matrix(3 * np.pi/4, [1, 1, 0], [0, 0, 0])
-        # self.R = vl.rotation_matrix(np.pi/2, [0, 1, 0], [0, 0, 0])
-        # self.R = vl.rotation_matrix(np.pi/2, [1, 0, 0], [0, 0, 0])
-        # self.R = vl.rotation_matrix(-np.pi/4, [1, 1, 0], [0, 0, 0])
-
-        # self.R = vl.rotation_matrix(-np.pi - np.pi/4, [0, 1, 0], [0, 0, 0])
-
-
-if __name__ == "__main__":
-    from camera import Camera
-    import matplotlib.pyplot as plt
-
-    camera = Camera(500, 500)
-    # camera = Camera(10, 10)
-
-    cylinder = Cylinder([0., -1., 35], radius=3., length=3., closed=True)
-
-    # R = vl.rotation_matrix(-np.pi - np.pi/4, [0, 1., 0], [0, 0, 0.])
-    R = vl.rotation_matrix(np.pi/2 + np.pi/8., [0, 1., 0], [0, 0, 0.])
-    cylinder.R = R
-
-    t, m, n = cylinder.intersection(camera.origin, camera.D)
-    # t, m, n = cylinder.intersection(camera.origin, np.array([0., 0., 1.]).reshape(-1, 1))
-    # plt.imshow((d * (d<global_config.MAX_DISTANCE)).reshape(500, 500)); plt.show()
-    # plt.imshow(((n * (t<global_config.MAX_DISTANCE)).T).reshape(camera.height, camera.width, 3)); plt.show()
-    plt.imshow(((m * (t<global_config.MAX_DISTANCE)).T).reshape(camera.height, camera.width, 3)); plt.show()
-    # plt.imshow(((t * (t<global_config.MAX_DISTANCE)).T).reshape(camera.height, camera.width)); plt.show()
-
-    # plt.imshow((d * (d<global_config.MAX_DISTANCE)).reshape(camera.height, camera.width)); plt.show()

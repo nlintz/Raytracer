@@ -29,6 +29,7 @@ def render():
     with open('examples/teapot.obj') as f:
         lines = f.readlines()
 
+    # simple (read stupid) parser for obj files
     V = []
     F = []
     for line in lines:

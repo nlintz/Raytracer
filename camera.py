@@ -17,7 +17,9 @@ class Camera(object):
         self.screen = vl.transform(TM, self.screen)
 
     def rotate(self, theta, direction, point=None):
-        RM = vl.translation_matrix(theta, direction, point)
+        if point is None:
+            point = self.origin
+        RM = vl.rotation_matrix(theta, direction, point)
 
         self.origin = vl.transform(RM, self.origin)
         self.screen = vl.transform(RM, self.screen)
@@ -39,14 +41,3 @@ class Camera(object):
     @property
     def D(self):
         return vl.vnorm(self.screen - self.origin)
-
-
-if __name__ == "__main__":
-    camera = Camera(width=400, height=300)
-    R = vl.rotation_matrix(np.pi/2, np.array([1, 0, 0]), np.array([0., 5., 5.]))
-    T = vl.translation_matrix(np.array([0., 5., 5.]))
-
-    camera.translate(T)
-
-    camera.rotate(R)
-    import ipdb; ipdb.set_trace()

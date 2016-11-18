@@ -1,7 +1,6 @@
 import numpy as np
 import vector_lib as vl
 import global_config
-from shaders import LambertShader, BlinnPhongShader, SpecularShader
 
 class RayTracer(object):
     def __init__(self, camera, scene, num_bounces=2, background_color=None):
@@ -70,7 +69,7 @@ class RayTracer(object):
 
 
     def color_diffuse(self, s, N, to_L, intensity):
-        lambert_color = LambertShader()(s.material, N, to_L)
+        lambert_color = np.maximum(vl.vdot(N, to_L), 0.) * s.material.surface_color
         return lambert_color * intensity * s.material.finish.diffuse
 
     def color_specular(self, s, N, V, to_L, to_O, intensity):

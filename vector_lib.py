@@ -14,11 +14,9 @@ def translation_matrix(A):
 
 
 def rotation_matrix(angle, direction, point=None):
-    # Note - rotations are in the clockwise direction
     sina = math.sin(angle)
     cosa = math.cos(angle)
-    direction = unit_vector(direction[:3])
-    # rotation matrix around unit vector
+    direction = vnorm(np.array(direction[:3])).ravel()
     R = np.diag([cosa, cosa, cosa])
     R += np.outer(direction, direction) * (1.0 - cosa)
     direction *= sina
@@ -28,29 +26,9 @@ def rotation_matrix(angle, direction, point=None):
     M = np.identity(4)
     M[:3, :3] = R
     if point is not None:
-        # rotation not around origin
-        point = np.array(point[:3], dtype=np.float64, copy=False)
+        point = np.array(point[:3], dtype=np.float64, copy=False).ravel()
         M[:3, 3] = point - np.dot(R, point)
     return M
-
-
-def unit_vector(data, axis=None, out=None):
-    if out is None:
-        data = np.array(data, dtype=np.float64, copy=True)
-        if data.ndim == 1:
-            data /= math.sqrt(np.dot(data, data))
-            return data
-    else:
-        if out is not data:
-            out[:] = np.array(data, copy=False)
-        data = out
-    length = np.atleast_1d(np.sum(data*data, axis))
-    np.sqrt(length, length)
-    if axis is not None:
-        length = np.expand_dims(length, axis)
-    data /= length
-    if out is None:
-        return data
 
 
 def vabs(A):
@@ -94,9 +72,3 @@ def triangle_normal(V):
     B = V[:, 2:3] - V[:, 0:1]
     return np.cross(A, B, axis=0)
 
-
-if __name__ == "__main__":
-    V = np.array([0., 5., 5.]).reshape(3, 1)
-    S = scale_matrix([2., 2., 2.])
-    # T = rotation_matrix(np.pi/2, np.array([1, 0, 0]), np.array([0., 5., 5.]))
-    print transform(S, V)

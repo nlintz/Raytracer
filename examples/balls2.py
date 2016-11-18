@@ -3,7 +3,7 @@ from camera import Camera
 from ray_tracer import RayTracer
 from scene_element import SceneElement
 from scene import Scene
-from geometry.sphere import Sphere, DiffuseSphere, ShinySphere
+from geometry.sphere import Sphere
 from material import Material, Finish
 import material.colors as colors
 import matplotlib.pyplot as plt
