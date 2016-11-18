@@ -38,7 +38,7 @@ class RayTracer(object):
             shadow_mask = self.shadow_mask(light_source, M, N, to_L)
 
             diffuse_color = diffuse_color + self.color_diffuse(s, N, to_L, light_source.material.emission_color) * shadow_mask
-            specular_color = specular_color + self.color_specular(s, N, V, to_L, to_O, light_source.material.emission_color) * shadow_mask
+            specular_color = specular_color + self.color_specular(s, N, to_L, to_O, light_source.material.emission_color) * shadow_mask
         return diffuse_color + specular_color
 
     def color_reflected_refracted(self, s, O, M, N, V, inside, bounces):
@@ -72,7 +72,7 @@ class RayTracer(object):
         lambert_color = np.maximum(vl.vdot(N, to_L), 0.) * s.material.surface_color
         return lambert_color * intensity * s.material.finish.diffuse
 
-    def color_specular(self, s, N, V, to_L, to_O, intensity):
+    def color_specular(self, s, N, to_L, to_O, intensity):
         if s.material.finish.specular == 0.:
             return 0.
         else:
