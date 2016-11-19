@@ -2,7 +2,7 @@ import vector_lib as vl
 import numpy as np
 import global_config
 from geometry import Geometry, Primitive
-import matplotlib.pyplot as plt
+
 
 class Cylinder(Geometry, Primitive):
     def __init__(self, center, radius, length=np.inf, closed=True):

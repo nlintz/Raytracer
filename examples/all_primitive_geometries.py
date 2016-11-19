@@ -1,7 +1,7 @@
 import numpy as np
 from camera import Camera
 from ray_tracer import RayTracer
-from scene_element import SceneElement
+from scene_element import SceneElement, LightSourcePoint, LightSourceDirectional
 from scene import Scene
 
 from geometry.cone import Cone
@@ -20,16 +20,19 @@ def render():
     camera = Camera(w, h, fov=np.pi / 6)
 
     # Materials
-    mat_ls = Material([0., 0., 0.], emission_color=np.array([3., 3., 3.]).reshape(-1, 1))
     base_finish = SoftDull
     base_finish.reflection = 0.5
     mat_base = Material(colors.P_Chrome1, finish=base_finish)
 
-    mat_s1 = Material(colors.Ruby1, finish=VeryHardPolished)
-    mat_s2 = Material(colors.Emerald1, finish=VeryHardPolished)
-    mat_s3 = Material(colors.Aquamarine1, finish=VeryHardPolished)
+    mat_f = VeryHardPolished
+    mat_f.reflection = 0.1
+    mat_s1 = Material(colors.Ruby1, finish=mat_f)
+    mat_s2 = Material(colors.Emerald1, finish=mat_f)
+    mat_s3 = Material(colors.Aquamarine1, finish=mat_f)
 
-    se_ls = SceneElement(Sphere([0., 20., 30.], 2.), mat_ls)
+    # se_ls = LightSourcePoint([-5., 15., 20.], intensity=1000., emission_color=[2., 2., 2.])
+    se_ls = LightSourceDirectional([1, -1, 0], intensity=2., emission_color=[1., 1., 1.])
+
     se_base = SceneElement(Plane([0.0, -4.0, 20.], [0., 1., 0.]), mat_base)
 
     cone = Cone([5., 0., 40.], 2., length=4, closed=True)
@@ -42,8 +45,6 @@ def render():
     se_s3 = SceneElement(Sphere([-5., 0., 40.], 2.), mat_s3)
 
     scene = Scene([se_ls, se_base, se_s1, se_s2, se_s3])
-    # scene = Scene([se_ls, se_base, se_s1])
-    # scene = Scene([se_ls, se_base, se_s2])
 
     # Render
     rt = RayTracer(camera, scene)

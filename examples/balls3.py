@@ -1,7 +1,7 @@
 import numpy as np
 from camera import Camera
 from ray_tracer import RayTracer
-from scene_element import SceneElement
+from scene_element import SceneElement, LightSourcePoint, LightSourceDirectional
 from scene import Scene
 from geometry.sphere import Sphere
 from material import Material, Finish
@@ -15,13 +15,11 @@ def render():
     camera = Camera(w, h, fov=np.pi / 6)
     
     # Materials
-    # mat_ls = Material([0., 0., 0.], emission_color=np.array([2., 2., 2.]).reshape(-1, 1))
-    mat_ls = Material([0., 0., 0.], emission_color=np.array([2., 2., 2.]).reshape(-1, 1))
-    mat_base = Material([0.2, 0.2, 0.2])
+    mat_base = Material([1., 1., 1.])
 
     # mat_s1 = Material(colors.Aquamarine, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
-    mat_s1 = Material(colors.Glass_Winebottle, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
-    # mat_s1 = Material(colors.P_Silver3, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
+    # mat_s1 = Material(colors.Glass_Winebottle, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
+    mat_s1 = Material(colors.P_Silver3, finish=Finish(diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, transparent=True, ior=1.5))
 
     mat_s2 = Material(colors.P_Copper3, finish=Medium, metallic=True)
     mat_s3 = Material(colors.P_Chrome3, finish=Medium, metallic=True)
@@ -29,7 +27,8 @@ def render():
 
 
     # Scene Elements + Scene
-    se_ls = SceneElement(Sphere([-2., 20., 30.], 3.), mat_ls)
+    se_ls = LightSourcePoint([-5., 15., 20.], intensity=1000., emission_color=[2., 2., 2.])
+
     se_base = SceneElement(Sphere([0.0, -10004., 20.], 10000.), mat_base)
 
     se_s1 = SceneElement(Sphere([0., 0., 20.], 4.), mat_s1)

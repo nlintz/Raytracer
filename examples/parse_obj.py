@@ -2,9 +2,10 @@ import numpy as np
 from geometry.triangle_mesh import TriangleMesh
 from camera import Camera
 from ray_tracer import RayTracer
-from scene_element import SceneElement
+from scene_element import SceneElement, LightSourcePoint, LightSourceDirectional
 from scene import Scene
-from material import Material
+from material import Material, Finish
+from material.finishes import VerySoftDull
 import material.colors as colors
 import matplotlib.pyplot as plt
 from geometry.sphere import Sphere
@@ -54,12 +55,12 @@ def render():
     # camera = Camera(w, h, fov=np.pi / 3)
     
     # Materials
-    mat_ls = Material([0., 0., 0.], reflection=0., transparency=0., emission_color=np.array([3., 3., 3.]).reshape(-1, 1))
-    mat_base = Material([0.2, 0.2, 0.2], reflection=0., transparency=0.)
+    mat_base = Material([0.2, 0.2, 0.2])
 
-    mat_s1 = Material(colors.NeonPink, diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, reflection=0.)
+    # mat_s1 = Material(colors.NeonPink, diffuse=0.7, ambient=0.1, specular=0.8, roughness=1./120, reflection=0.)
+    mat_s1 = Material(colors.NeonPink, finish=VerySoftDull)
 
-    se_ls = SceneElement(Sphere([0., 100., -100.], 3.), mat_ls)
+    se_ls = LightSourceDirectional([1, -1, 0], intensity=2., emission_color=[1., 1., 1.])
     se_base = SceneElement(Sphere([0.0, -10004., 20.], 10000.), mat_base)
 
     se_tm = SceneElement(tm, mat_s1)

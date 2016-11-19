@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 def render():
-    (w, h) = (640, 480)
+    (w, h) = (640*2, 480*2)
     camera = Camera(w, h, fov=np.pi / 6)
     
     # Materials
@@ -24,15 +24,19 @@ def render():
 
     se_base = SceneElement(Sphere([0.0, -10004., 20.], 10000.), mat_base)
 
-    se_s1 = SceneElement(Sphere([-1., -2., 20.], 2.), mat_s1)
-    se_s2 = SceneElement(Sphere([3.25, -1., 22.], 2.), mat_s2)
-    se_s3 = SceneElement(Sphere([3.25, -1., 27.], 2.), mat_s1)
+    se_s1 = SceneElement(Sphere([-3., -1., 20.], 2.), mat_s1)
+    se_s2 = SceneElement(Sphere([0, -1., 35.], 2.), mat_s1)
+    se_s3 = SceneElement(Sphere([4., -1., 40.], 2.), mat_s1)
+    se_s4 = SceneElement(Sphere([9., -1., 55.], 2.), mat_s1)
 
-    scene = Scene([se_ls, se_ls2, se_base, se_s1, se_s2, se_s3])
+    scene = Scene([se_ls, se_ls2, se_base, se_s1, se_s2, se_s3, se_s4])
 
     # Render
     rt = RayTracer(camera, scene)
-    traced = rt.render()
+    # traced = rt.render_dov([0, -1., 35.])
+    # traced = rt.render_dov([-3., -1., 20.])
+    traced = rt.render_dov([4., -1., 40.])
+    # traced = rt.render()
     plt.imshow(traced); plt.show()
 
 

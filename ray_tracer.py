@@ -1,6 +1,7 @@
 import numpy as np
 import vector_lib as vl
 import global_config
+from scene_element import LightSourcePoint, LightSourceDirectional
 
 class RayTracer(object):
     def __init__(self, camera, scene, num_bounces=2, background_color=None):
@@ -34,11 +35,18 @@ class RayTracer(object):
         to_O = vl.vnorm(O - M)
 
         for light_source in self.scene.light_sources:
-            to_L = vl.vnorm(light_source.geometry.center - M)
+            if isinstance(light_source, LightSourcePoint):
+                light_dir = light_source.center - M
+                to_L = vl.vnorm(light_dir)
+                r2 = vl.vabs(light_dir)
+                intensity = light_source.emission_color * light_source.intensity / (4 * np.pi * r2)
+            elif isinstance(light_source, LightSourceDirectional):
+                to_L = -light_source.direction
+                intensity = light_source.emission_color * light_source.intensity
             shadow_mask = self.shadow_mask(light_source, M, N, to_L)
 
-            diffuse_color = diffuse_color + self.color_diffuse(s, N, to_L, light_source.material.emission_color) * shadow_mask
-            specular_color = specular_color + self.color_specular(s, N, to_L, to_O, light_source.material.emission_color) * shadow_mask
+            diffuse_color = diffuse_color + self.color_diffuse(s, N, to_L, intensity) * shadow_mask
+            specular_color = specular_color + self.color_specular(s, N, to_L, to_O, intensity) * shadow_mask
         return diffuse_color + specular_color
 
     def color_reflected_refracted(self, s, O, M, N, V, inside, bounces):
@@ -150,8 +158,9 @@ class RayTracer(object):
         light_dists = [obj.geometry.intersect_light(M, N, to_light)[0] for obj in self.scene.scene_elements if obj is not s]
         if len(light_dists):
             light_nearest = np.min(light_dists, axis=0)
-            point_to_light = np.sqrt(vl.vabs(M - s.geometry.center))
-            shadow_mask = ((light_nearest == global_config.MAX_DISTANCE) | (light_nearest > point_to_light))
+            # point_to_light = np.sqrt(vl.vabs(M - s.geometry.center))
+            # shadow_mask = ((light_nearest == global_config.MAX_DISTANCE) | (light_nearest > point_to_light))
+            shadow_mask = light_nearest == global_config.MAX_DISTANCE
         else:
             shadow_mask = np.ones((1, M.shape[1])).astype(np.bool)
         return shadow_mask
@@ -160,6 +169,17 @@ class RayTracer(object):
         traced = self.trace(self.camera.origin, self.camera.D, bounces=0)
         return traced_to_image(traced, self.camera.width, self.camera.height)
 
+    def render_dov(self, focal_point, num_samples=32):
+        traces = []
+        for i in range(num_samples):
+            print "tracing sample: {}".format(i)
+            theta = (np.random.rand() * np.pi - np.pi/2) * 0.005
+            direction = np.random.randint(0, 2, (3,))
+            self.camera.rotate(theta, direction, focal_point)
+            traces.append(self.render())
+            self.camera.rotate(-theta, direction, focal_point) # move camera back
+        import matplotlib.pyplot as plt
+        plt.imshow((np.sum(traces, axis=0)/float(num_samples)).astype(np.uint8));plt.show()
 
 def traced_to_image(traced, w, h):
     # return traced.T.reshape(h, w, 3)

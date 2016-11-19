@@ -13,10 +13,9 @@ class Finish(object):
 
 class Material(object):
     def __init__(self, surface_color, finish=Finish(),
-                 emission_color=np.zeros((3, 1)), metallic=False):
+                 metallic=False):
         self.surface_color = np.reshape(surface_color, (-1, 1))
         self.finish = finish
-        self.emission_color = emission_color
         self.metallic = metallic
 
 

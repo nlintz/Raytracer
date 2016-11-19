@@ -2,7 +2,6 @@ import vector_lib as vl
 import numpy as np
 import global_config
 from geometry import Geometry
-import matplotlib.pyplot as plt
 
 
 class Triangle(Geometry):
