@@ -169,17 +169,17 @@ class RayTracer(object):
         traced = self.trace(self.camera.origin, self.camera.D, bounces=0)
         return traced_to_image(traced, self.camera.width, self.camera.height)
 
-    def render_dov(self, focal_point, num_samples=32):
+    def render_dov(self, focal_point, num_samples=16):
         traces = []
+        directions = np.array([[0, 1, 0], [1, 0, 0]])
         for i in range(num_samples):
             print "tracing sample: {}".format(i)
-            theta = (np.random.rand() * np.pi - np.pi/2) * 0.005
-            direction = np.random.randint(0, 2, (3,))
+            theta = (np.random.rand() - 0.5) * (np.pi / 2) * 0.01
+            direction = directions[np.random.randint(0, 2)]
             self.camera.rotate(theta, direction, focal_point)
             traces.append(self.render())
             self.camera.rotate(-theta, direction, focal_point) # move camera back
-        import matplotlib.pyplot as plt
-        plt.imshow((np.sum(traces, axis=0)/float(num_samples)).astype(np.uint8));plt.show()
+        return (np.sum(traces, axis=0)/float(num_samples)).astype(np.uint8)
 
 def traced_to_image(traced, w, h):
     # return traced.T.reshape(h, w, 3)

@@ -10,17 +10,17 @@ import matplotlib.pyplot as plt
 
 
 def render():
-    (w, h) = (640*2, 480*2)
+    (w, h) = (640, 480)
     camera = Camera(w, h, fov=np.pi / 6)
     
     # Materials
     mat_base = Material(colors.DimGray)
 
-    mat_s1 = Material(colors.CadetBlue, finish=Finish(reflection=0., specular=0.8, roughness=1./20))
+    mat_s1 = Material(colors.P_Silver3, finish=Finish(reflection=0., specular=0.8, roughness=1./20))
     mat_s2 = Material(colors.P_Brass3, finish=Finish(ambient=0.25, diffuse=0.5, transparent=True, specular=0.8, roughness=1./80, ior=1.5), metallic=True)
 
     se_ls = LightSourcePoint([-5., 10., 20.], intensity=1000.)
-    se_ls2 = LightSourceDirectional([1., -1., 1.], intensity=0.2)
+    se_ls2 = LightSourceDirectional([1., -1., 1.], intensity=0.5)
 
     se_base = SceneElement(Sphere([0.0, -10004., 20.], 10000.), mat_base)
 
@@ -33,11 +33,19 @@ def render():
 
     # Render
     rt = RayTracer(camera, scene)
-    # traced = rt.render_dov([0, -1., 35.])
-    # traced = rt.render_dov([-3., -1., 20.])
-    traced = rt.render_dov([4., -1., 40.])
+    traced_nodov = rt.render()
+
+    traced = rt.render_dov([-3., -1., 20.], num_samples=8)
+    # traced = rt.render_dov([0, -1., 35.], num_samples=8)
+    # traced = rt.render_dov([4., -1., 40.], num_samples=8)
+    # traced = rt.render_dov([9., -1., 55.], num_samples=4)
     # traced = rt.render()
-    plt.imshow(traced); plt.show()
+
+    plt.subplot(211)
+    plt.imshow(traced_nodov)
+    plt.subplot(212)
+    plt.imshow(traced)
+    plt.show()
 
 
 if __name__ == "__main__":
