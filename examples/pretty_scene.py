@@ -31,7 +31,7 @@ def render():
 
 
     # Scene Elements + Scene
-    se_ls = LightSourcePoint([-5., 15., 15.], intensity=500., emission_color=[2., 2., 2.])
+    se_ls = LightSourcePoint([-5., 15., 15.], intensity=1000., emission_color=[2., 2., 2.])
 
     se_base = SceneElement(Sphere([0.0, -10004., 20.], 10000.), mat_base)
 
@@ -49,10 +49,10 @@ def render():
     scene = Scene([se_ls, se_base, se_s1, se_s2, se_s3, se_s4, se_s5, se_s6, se_s7, se_s8, se_s9])
 
     # Render
-    rt = RayTracer(camera, scene, num_bounces=10, background_color=[0.9, 0.9, 0.9])
+    rt = RayTracer(camera, scene, num_bounces=10)
     traced = rt.render()
     # plt.imshow(traced); plt.show()
-    misc.imsave('renders/pretty.png', traced)
+    misc.imsave('renders/pretty2.png', traced)
 
 
 if __name__ == "__main__":
